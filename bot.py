@@ -28,11 +28,23 @@ async def announce(ctx, *, message: str):
         description=message,
         color=0xE74C3C
     )
-    await ctx.send(embed=embed)
+    # ใส่ Discord ID ของสมาชิกที่ต้องการแท็ก
+user_ids = [
+    123456789012345678,
+    987654321098765432
+]
 
-@announce.error
-async def announce_error(ctx, error):
-    if isinstance(error, commands.MissingPermissions):
-        await ctx.send("คุณไม่มีสิทธิ์ใช้คำสั่งนี้", delete_after=5)
+# สร้างข้อความแท็กสมาชิก
+mentions = " ".join(f"<@{user_id}>" for user_id in user_ids)
+
+# ส่ง @here และแท็กสมาชิก พร้อม Embed
+await ctx.send(
+    content=f"@here {mentions}",
+    embed=embed,
+    allowed_mentions=discord.AllowedMentions(
+        everyone=True,
+        users=True
+    )
+)
 
 bot.run(TOKEN)
