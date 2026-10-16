@@ -1,0 +1,36 @@
+import discord
+from discord.ext import commands
+
+TOKEN = ""   # ← ใส่ Token เดิม
+
+intents = discord.Intents.default()
+intents.message_content = True  # ต้องเปิด
+
+bot = commands.Bot(command_prefix="!", intents=intents)
+
+@bot.event
+async def on_ready():
+    print(f"ล็อกอินสำเร็จในชื่อ {bot.user}")
+
+@bot.command()
+@commands.has_permissions(administrator=True)
+async def announce(ctx, *, message: str):
+    # ลบข้อความของคนที่พิมพ์คำสั่งทิ้ง
+    try:
+        await ctx.message.delete()
+    except:
+        pass
+
+    # ส่งประกาศ
+    embed = discord.Embed(
+        description=message,
+        color=0xE74C3C
+    )
+    await ctx.send(embed=embed)
+
+@announce.error
+async def announce_error(ctx, error):
+    if isinstance(error, commands.MissingPermissions):
+        await ctx.send("คุณไม่มีสิทธิ์ใช้คำสั่งนี้", delete_after=5)
+
+bot.run(TOKEN)
