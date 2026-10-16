@@ -60,6 +60,6 @@ async def announce_error(ctx, error):
     if isinstance(error, commands.MissingPermissions):
         await ctx.send("คุณไม่มีสิทธิ์ใช้คำสั่งนี้", delete_after=5)
 
-)
+
 
 bot.run(TOKEN)
