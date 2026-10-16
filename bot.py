@@ -1,10 +1,12 @@
 import discord
 from discord.ext import commands
+import os
 
-TOKEN = ""   # ← ใส่ Token เดิม
+TOKEN = os.getenv("TOKEN")
+print("TOKEN ที่ได้:", TOKEN)  # เพิ่มบรรทัดนี้เพื่อเช็ค
 
 intents = discord.Intents.default()
-intents.message_content = True  # ต้องเปิด
+intents.message_content = True
 
 bot = commands.Bot(command_prefix="!", intents=intents)
 
