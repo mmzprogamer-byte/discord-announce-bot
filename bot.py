@@ -28,11 +28,23 @@ async def announce(ctx, *, message: str):
         description=message,
         color=0xE74C3C
     )
-    await ctx.send(embed=embed)
+    # ส่ง @here นอกกรอบ และประกาศในกรอบ
+    await ctx.send(
+        content="@here",
+        embed=embed,
+        allowed_mentions=discord.AllowedMentions(
+            everyone=True
+        )
+    )
+
 
 @announce.error
 async def announce_error(ctx, error):
     if isinstance(error, commands.MissingPermissions):
-        await ctx.send("คุณไม่มีสิทธิ์ใช้คำสั่งนี้", delete_after=5)
+        await ctx.send(
+            "คุณไม่มีสิทธิ์ใช้คำสั่งนี้",
+            delete_after=5
+        )
+
 
 bot.run(TOKEN)
