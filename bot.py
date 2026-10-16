@@ -28,23 +28,38 @@ async def announce(ctx, *, message: str):
         description=message,
         color=0xE74C3C
     )
-    # ใส่ Discord ID ของสมาชิกที่ต้องการแท็ก
-user_ids = [
-    123456789012345678,
-    987654321098765432
-]
+    
+@bot.command()
+@commands.has_permissions(administrator=True)
+async def announce(ctx, *, message: str):
 
-# สร้างข้อความแท็กสมาชิก
-mentions = " ".join(f"<@{user_id}>" for user_id in user_ids)
+    # ลบข้อความคำสั่งของคนที่พิมพ์
+    try:
+        await ctx.message.delete()
+    except:
+        pass
 
-# ส่ง @here และแท็กสมาชิก พร้อม Embed
-await ctx.send(
-    content=f"@here {mentions}",
-    embed=embed,
-    allowed_mentions=discord.AllowedMentions(
-        everyone=True,
-        users=True
+    # สร้างกรอบประกาศ
+    embed = discord.Embed(
+        description=message,
+        color=0xE74C3C
     )
+
+    # ส่ง @here นอกกรอบ พร้อมประกาศในกรอบ
+    await ctx.send(
+        content="@here",
+        embed=embed,
+        allowed_mentions=discord.AllowedMentions(
+            everyone=True
+        )
+    )
+
+
+@announce.error
+async def announce_error(ctx, error):
+    if isinstance(error, commands.MissingPermissions):
+        await ctx.send("คุณไม่มีสิทธิ์ใช้คำสั่งนี้", delete_after=5)
+
 )
 
 bot.run(TOKEN)
